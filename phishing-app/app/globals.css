@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  /* PhishGuard Design System Colors */
+  --primary: #2563EB;
+  --primary-light: #3B82F6;
+  --background: #FFFFFF;
+  --text-primary: #111111;
+  --text-secondary: #6B7280;
+  --border: #E5E7EB;
+  --accent-light: #DBEAFE;
+  --accent-dark: #1E40AF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #2563EB;
+    --primary-light: #3B82F6;
+    --background: #0f172a;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --border: #334155;
+    --accent-light: #1e3a8a;
+    --accent-dark: #93c5fd;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Subtle grid background pattern */
+.grid-pattern {
+  background-image: 
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+}

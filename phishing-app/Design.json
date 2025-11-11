@@ -1,0 +1,118 @@
+{
+  "designSystemProfile": {
+    "name": "PhishGuardStyleSystem",
+    "visualIdentity": {
+      "theme": "modern-minimal",
+      "colorScheme": {
+        "primary": { "hue": 220, "saturation": 90, "lightness": 55, "approx": "#2563EB" },
+        "background": { "hue": 0, "saturation": 0, "lightness": 100, "approx": "#FFFFFF" },
+        "textPrimary": { "hue": 0, "saturation": 0, "lightness": 10, "approx": "#111111" },
+        "textSecondary": { "hue": 240, "saturation": 3, "lightness": 45, "approx": "#6B7280" },
+        "accent": { "hue": 220, "saturation": 95, "lightness": 65, "approx": "#3B82F6" },
+        "border": { "hue": 0, "saturation": 0, "lightness": 93, "approx": "#E5E7EB" }
+      },
+      "typography": {
+        "fontFamily": "Inter, sans-serif",
+        "fontWeights": {
+          "heading": 700,
+          "subheading": 500,
+          "body": 400
+        },
+        "letterSpacing": "normal",
+        "lineHeights": {
+          "heading": 1.2,
+          "body": 1.6
+        }
+      },
+      "spacingScale": [4, 8, 12, 16, 24, 32, 48, 64],
+      "borderRadius": {
+        "small": 4,
+        "medium": 8,
+        "large": 24,
+        "pill": 9999
+      },
+      "shadows": {
+        "subtle": "0 1px 3px rgba(0,0,0,0.08)",
+        "button": "0 2px 6px rgba(37,99,235,0.3)"
+      },
+      "layoutGrid": {
+        "columns": 12,
+        "gutterWidth": 24,
+        "maxWidth": 1200,
+        "alignment": "centered"
+      }
+    },
+    "componentSystem": {
+      "header": {
+        "layout": "horizontal-flex",
+        "alignment": "space-between",
+        "paddingY": 16,
+        "elements": [
+          "logo-left",
+          "nav-center",
+          "cta-right"
+        ],
+        "ctaStyle": "filled-pill",
+        "navSpacing": 32
+      },
+      "heroSection": {
+        "alignment": "center",
+        "maxWidth": 720,
+        "typography": {
+          "titleSize": "3xl",
+          "subtitleSize": "md",
+          "titleWeight": "bold",
+          "subtitleWeight": "medium"
+        },
+        "background": "subtle-grid-pattern",
+        "buttons": {
+          "primary": {
+            "style": "solid",
+            "background": "primary",
+            "textColor": "white",
+            "paddingX": 24,
+            "paddingY": 12,
+            "borderRadius": "pill"
+          },
+          "secondary": {
+            "style": "outline",
+            "borderColor": "border",
+            "textColor": "textPrimary",
+            "paddingX": 24,
+            "paddingY": 12,
+            "borderRadius": "pill"
+          }
+        },
+        "tagBadge": {
+          "background": "accent-light",
+          "textColor": "accent-dark",
+          "borderRadius": "pill",
+          "fontSize": "xs",
+          "paddingX": 12,
+          "paddingY": 4
+        }
+      },
+      "footer": {
+        "layout": "centered",
+        "textStyle": "muted",
+        "padding": 48
+      }
+    },
+    "motionAndBehavior": {
+      "buttonHover": "scale(1.05)",
+      "transitionDuration": "200ms",
+      "transitionEasing": "ease-in-out"
+    },
+    "brandingTone": {
+      "keywords": [
+        "clean",
+        "trustworthy",
+        "AI-driven",
+        "professional",
+        "neutral",
+        "tech-oriented"
+      ],
+      "imageryTone": "light backgrounds, clear contrast, minimal iconography"
+    }
+  }
+}
