@@ -1,34 +1,117 @@
 @import "tailwindcss";
 
 :root {
-  /* PhishGuard Design System Colors */
-  --primary: #2563EB;
-  --primary-light: #3B82F6;
-  --background: #FFFFFF;
-  --text-primary: #111111;
-  --text-secondary: #6B7280;
-  --border: #E5E7EB;
-  --accent-light: #DBEAFE;
-  --accent-dark: #1E40AF;
+  --background: #f1f0e5;
+  --foreground: #56453f;
+  --card: #f1f0e5;
+  --card-foreground: #56453f;
+  --popover: #ffffff;
+  --popover-foreground: #56453f;
+  --primary: #a37764;
+  --primary-foreground: #ffffff;
+  --secondary: #baab92;
+  --secondary-foreground: #ffffff;
+  --muted: #e4c7b8;
+  --muted-foreground: #8a655a;
+  --accent: #e4c7b8;
+  --accent-foreground: #56453f;
+  --destructive: #1f1a17;
+  --destructive-foreground: #ffffff;
+  --border: #baab92;
+  --input: #baab92;
+  --ring: #a37764;
+  --chart-1: #a37764;
+  --chart-2: #8a655a;
+  --chart-3: #c39e88;
+  --chart-4: #baab92;
+  --chart-5: #a28777;
+  --sidebar: #ebd6cb;
+  --sidebar-foreground: #56453f;
+  --sidebar-primary: #a37764;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #c39e88;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #a28777;
+  --sidebar-ring: #a37764;
+  --font-sans: DM Sans, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.5rem;
+  --shadow-x: 2px;
+  --shadow-y: 2px;
+  --shadow-blur: 0px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.11;
+  --shadow-color: hsl(20 18% 51% / 0.4);
+  --shadow-2xs: 2px 2px 0px 0px hsl(20 18% 51% / 0.06);
+  --shadow-xs: 2px 2px 0px 0px hsl(20 18% 51% / 0.06);
+  --shadow-sm: 2px 2px 0px 0px hsl(20 18% 51% / 0.11), 2px 1px 2px -1px hsl(20 18% 51% / 0.11);
+  --shadow: 2px 2px 0px 0px hsl(20 18% 51% / 0.11), 2px 1px 2px -1px hsl(20 18% 51% / 0.11);
+  --shadow-md: 2px 2px 0px 0px hsl(20 18% 51% / 0.11), 2px 2px 4px -1px hsl(20 18% 51% / 0.11);
+  --shadow-lg: 2px 2px 0px 0px hsl(20 18% 51% / 0.11), 2px 4px 6px -1px hsl(20 18% 51% / 0.11);
+  --shadow-xl: 2px 2px 0px 0px hsl(20 18% 51% / 0.11), 2px 8px 10px -1px hsl(20 18% 51% / 0.11);
+  --shadow-2xl: 2px 2px 0px 0px hsl(20 18% 51% / 0.28);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary: #2563EB;
-    --primary-light: #3B82F6;
-    --background: #0f172a;
-    --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
-    --border: #334155;
-    --accent-light: #1e3a8a;
-    --accent-dark: #93c5fd;
-  }
+.dark {
+  --background: #2d2521;
+  --foreground: #f1f0e5;
+  --card: #3c332e;
+  --card-foreground: #f1f0e5;
+  --popover: #3c332e;
+  --popover-foreground: #f1f0e5;
+  --primary: #c39e88;
+  --primary-foreground: #2d2521;
+  --secondary: #8a655a;
+  --secondary-foreground: #f1f0e5;
+  --muted: #56453f;
+  --muted-foreground: #c5aa9b;
+  --accent: #baab92;
+  --accent-foreground: #2d2521;
+  --destructive: #e57373;
+  --destructive-foreground: #2d2521;
+  --border: #56453f;
+  --input: #56453f;
+  --ring: #c39e88;
+  --chart-1: #c39e88;
+  --chart-2: #baab92;
+  --chart-3: #a37764;
+  --chart-4: #8a655a;
+  --chart-5: #a28777;
+  --sidebar: #1f1a17;
+  --sidebar-foreground: #f1f0e5;
+  --sidebar-primary: #c39e88;
+  --sidebar-primary-foreground: #1f1a17;
+  --sidebar-accent: #baab92;
+  --sidebar-accent-foreground: #1f1a17;
+  --sidebar-border: #56453f;
+  --sidebar-ring: #c39e88;
+  --font-sans: DM Sans, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.5rem;
+  --shadow-x: 2px;
+  --shadow-y: 2px;
+  --shadow-blur: 0px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.11;
+  --shadow-color: hsl(20 18% 30% / 0.5);
+  --shadow-2xs: 2px 2px 0px 0px hsl(20 18% 30% / 0.06);
+  --shadow-xs: 2px 2px 0px 0px hsl(20 18% 30% / 0.06);
+  --shadow-sm: 2px 2px 0px 0px hsl(20 18% 30% / 0.11), 2px 1px 2px -1px hsl(20 18% 30% / 0.11);
+  --shadow: 2px 2px 0px 0px hsl(20 18% 30% / 0.11), 2px 1px 2px -1px hsl(20 18% 30% / 0.11);
+  --shadow-md: 2px 2px 0px 0px hsl(20 18% 30% / 0.11), 2px 2px 4px -1px hsl(20 18% 30% / 0.11);
+  --shadow-lg: 2px 2px 0px 0px hsl(20 18% 30% / 0.11), 2px 4px 6px -1px hsl(20 18% 30% / 0.11);
+  --shadow-xl: 2px 2px 0px 0px hsl(20 18% 30% / 0.11), 2px 8px 10px -1px hsl(20 18% 30% / 0.11);
+  --shadow-2xl: 2px 2px 0px 0px hsl(20 18% 30% / 0.28);
 }
 
 body {
   background: var(--background);
-  color: var(--text-primary);
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  color: var(--foreground);
+  font-family: var(--font-sans);
   line-height: 1.6;
 }
 
