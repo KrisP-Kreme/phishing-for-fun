@@ -76,10 +76,12 @@ export default function Home() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="group flex items-center justify-center gap-2 text-[var(--primary-foreground)] font-semibold px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'var(--primary)' }}>
-                Start Learning Now
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <Link href="/app">
+                <button className="group flex items-center justify-center gap-2 text-[var(--primary-foreground)] font-semibold px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'var(--primary)' }}>
+                  Start Learning Now
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Link>
               <button className="flex items-center justify-center gap-2 border-2 font-semibold px-8 py-4 rounded-full transition-all duration-200" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>
                 Learn More
               </button>
