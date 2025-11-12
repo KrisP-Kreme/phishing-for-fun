@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Shield, Zap, Users, Lock } from "lucide-react";
+import { ArrowRight, Shield, Zap, Users, Lock} from "lucide-react";
+import { LinkedinLogo } from "@phosphor-icons/react";
+import { GithubLogoIcon } from "@phosphor-icons/react";
 
 export default function Home() {
   return (
@@ -19,6 +21,12 @@ export default function Home() {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-8">
+            <Link
+              href="#home"
+              className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            >
+              Home
+            </Link>
             <Link
               href="#features"
               className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
@@ -40,14 +48,16 @@ export default function Home() {
           </nav>
 
           {/* CTA Button */}
-          <button className="text-[var(--primary-foreground)] font-medium px-6 py-2.5 rounded-full transition-all duration-200 hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'var(--primary)' }}>
-            Get Started
-          </button>
+          <Link href="/app">
+            <button className="text-[var(--primary-foreground)] cursor-pointer font-medium px-6 py-2.5 rounded-full transition-all duration-200 hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'var(--primary)' }}>
+              Get Started
+            </button>
+          </Link>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: 'var(--background)' }}>
+      <section id="home" className="relative overflow-hidden" style={{ backgroundColor: 'var(--background)' }}>
         {/* Grid Pattern Background */}
         <div className="absolute inset-0 grid-pattern opacity-20"></div>
 
@@ -70,55 +80,21 @@ export default function Home() {
             {/* Subtitle */}
             <p className="text-xl leading-relaxed mb-10 max-w-2xl text-[var(--muted-foreground)]">
               Understand phishing threats with our AI-driven educational platform.
-              Create, analyze, and learn how to identify attacks in a safe,
+              Create, analyze, and learn how phishing attacks can be formulated in a safe,
               controlled environment.
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/app">
-                <button className="group flex items-center justify-center gap-2 text-[var(--primary-foreground)] font-semibold px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'var(--primary)' }}>
-                  Start Learning Now
+                <button className="group flex items-center justify-center gap-2 text-[var(--primary-foreground)] font-semibold px-8 py-4 rounded-full transition-all duration-200 cursor-pointer hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'var(--primary)' }}>
+                  Try It Now
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
-              <button className="flex items-center justify-center gap-2 border-2 font-semibold px-8 py-4 rounded-full transition-all duration-200" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>
-                Learn More
-              </button>
+
             </div>
 
-            {/* Social Proof */}
-            <div className="mt-14 pt-8 border-t" style={{ borderColor: 'var(--border)' }}>
-              <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                Trusted by security professionals and educators worldwide
-              </p>
-              <div className="flex justify-center gap-8">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    10K+
-                  </div>
-                  <p className="text-sm text-[var(--muted-foreground)]">
-                    Active Users
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    500+
-                  </div>
-                  <p className="text-sm text-[var(--muted-foreground)]">
-                    Organizations
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    99.9%
-                  </div>
-                  <p className="text-sm text-[var(--muted-foreground)]">
-                    Uptime
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -130,8 +106,8 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Powerful Features for Modern Security
             </h2>
-            <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto">
-              Everything you need to teach and learn about email security threats
+            <p className="text-xl text-[var(--muted-foreground)] max-w-3xl mx-auto">
+              Everything you need to understand and learn about email security threats
             </p>
           </div>
 
@@ -215,14 +191,14 @@ export default function Home() {
                   1
                 </div>
                 <h3 className="text-xl font-bold mb-3">
-                  Create a Campaign
+                  Input a Domain
                 </h3>
                 <p className="text-[var(--muted-foreground)]">
-                  Set up your phishing simulation campaign with customizable
-                  templates or generate emails with AI.
+                  Find a domain to test and input its address.
+                  This will be the target for the phishing simulation.
                 </p>
               </div>
-              <div className="hidden md:block absolute top-20 right-0 w-12 h-1 bg-gradient-to-r" style={{ backgroundImage: `linear-gradient(to right, var(--primary), transparent)` }}></div>
+              <div className="hidden md:block absolute top-20 right-0 w-12 h-1 bg-gradient-to-r" style={{ backgroundImage: `linear-gradient(to right, transparent, var(--primary))` }}></div>
             </div>
 
             {/* Step 2 */}
@@ -239,7 +215,7 @@ export default function Home() {
                   identify vulnerable areas.
                 </p>
               </div>
-              <div className="hidden md:block absolute top-20 right-0 w-12 h-1 bg-gradient-to-r" style={{ backgroundImage: `linear-gradient(to right, var(--primary), transparent)` }}></div>
+              <div className="hidden md:block absolute top-20 right-0 w-12 h-1 bg-gradient-to-r" style={{ backgroundImage: `linear-gradient(to right, transparent, var(--primary))` }}></div>
             </div>
 
             {/* Step 3 */}
@@ -287,7 +263,26 @@ export default function Home() {
                   <br></br>
                   With his background in Cybersecurity and a real passion for ethical hacking and cybersecurity education, he co-created PhishGuard alongside Kristijan.
               </p>
+              <div className="flex gap-2 justify-start">
+                <a
+                  href="https://www.linkedin.com/in/nikolas-vittorio/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-[var(--accent-foreground)] hover:text-[var(--accent)] transition-colors"
+                  >
+                  <LinkedinLogo size={28} weight="fill" />
+                </a>
+                <a
+                  href="https://github.com/NikolasVittorio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-[var(--accent-foreground)] hover:text-[var(--accent)] transition-colors"
+                  >
+                  <GithubLogoIcon size={28} weight="fill" />
+                </a>
+              </div>
             </div>
+
 
             <div className="rounded-lg p-2 border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
               <div className="aspect-square rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--accent)' }}>
@@ -313,6 +308,24 @@ export default function Home() {
                   <br></br>
                   He has just completed his Bachelor's degree in Computer Science at RMIT University and is eager to work on more innovative projects like this one.      
               </p>
+              <div className="flex gap-2 justify-start">
+                <a
+                  href="https://www.linkedin.com/in/kristijanpopordanoski/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-[var(--accent-foreground)] hover:text-[var(--accent)] transition-colors"
+                  >
+                  <LinkedinLogo size={28} weight="fill" />
+                </a>
+                <a
+                  href="https://github.com/KrisP-Kreme"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-[var(--accent-foreground)] hover:text-[var(--accent)] transition-colors"
+                  >
+                  <GithubLogoIcon size={28} weight="fill" />
+                </a>
+              </div>
             </div>
 
             <div className="rounded-lg p-2 border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
@@ -328,22 +341,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--primary)' }}>
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-[var(--primary-foreground)] mb-6">
-            Ready to Strengthen Your Security?
-          </h2>
-          <p className="text-xl text-[var(--primary-foreground)] mb-10 max-w-2xl mx-auto" style={{ opacity: 0.9 }}>
-            Join thousands of organizations already using PhishGuard to train their
-            teams and reduce security risks.
-          </p>
-          <button className="inline-flex items-center gap-2 text-[var(--primary)] font-bold px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 hover:shadow-lg" style={{ backgroundColor: 'var(--primary-foreground)' }}>
-            Get Started For Free
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        </div>
-      </section>
+
 
       {/* Footer */}
       <footer className="text-[var(--muted-foreground)] border-t" style={{ backgroundColor: 'var(--destructive)', color: 'var(--destructive-foreground)', borderColor: 'var(--border)' }}>
@@ -359,86 +357,17 @@ export default function Home() {
                 AI-powered email security education platform.
               </p>
             </div>
-
-            {/* Product */}
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    Security
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    Careers
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
           </div>
 
           <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center text-sm" style={{ borderColor: 'var(--border)', color: 'var(--destructive-foreground)', opacity: 0.8 }}>
             <p>&copy; 2025 PhishGuard. All rights reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
-              <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                Twitter
+              <Link href="/app">                
+                 Get Started
               </Link>
-              <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                LinkedIn
-              </Link>
-              <Link href="#" className="hover:text-[var(--destructive-foreground)] transition-colors">
-                GitHub
-              </Link>
+              <a href="https://github.com/KrisP-Kreme/phishing-for-fun" className="hover:text-[var(--destructive-foreground)] transition-colors">
+                Project Repo
+              </a>
             </div>
           </div>
         </div>
