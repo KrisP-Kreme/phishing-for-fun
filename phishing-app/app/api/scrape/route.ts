@@ -218,13 +218,22 @@ async function scrapeDomain(domain: string) {
 
     // Deduplicate and clean fonts
     const cleanedFonts = Array.from(new Set(fonts))
-      .map((f) =>
-        f
+      .map((f) => {
+        // Clean up the string
+        let cleaned = f
           .replace(/['"]/g, "")
           .replace(/url\(|url\(|\)/g, "")
           .replace(/!important/gi, "")
-          .trim()
-      )
+          .trim();
+        
+        // Remove any CSS after font declaration (fix broken parsing)
+        const semiColonIndex = cleaned.indexOf(".");
+        if (semiColonIndex > 0 && cleaned.includes("}")) {
+          cleaned = cleaned.substring(0, semiColonIndex).trim();
+        }
+        
+        return cleaned;
+      })
       .filter((f) => {
         // Remove empty strings and common CSS defaults
         if (
@@ -232,8 +241,14 @@ async function scrapeDomain(domain: string) {
           f === "none" ||
           f === "inherit" ||
           f === "initial" ||
-          f === "unset"
+          f === "unset" ||
+          f.length < 2
         ) {
+          return false;
+        }
+
+        // Remove if it contains CSS selectors or properties (malformed)
+        if (f.includes("{") || f.includes("}") || f.includes(":") || f.includes(";")) {
           return false;
         }
 
@@ -243,7 +258,9 @@ async function scrapeDomain(domain: string) {
           f.toLowerCase().includes("awesome") ||
           f.toLowerCase().includes("symbol") ||
           f.toLowerCase().includes("font-awesome") ||
-          f.toLowerCase().includes("fa-")
+          f.toLowerCase().includes("fa-") ||
+          f.toLowerCase().includes("slick") ||
+          f.toLowerCase().includes("dingbat")
         ) {
           return false;
         }
@@ -278,7 +295,7 @@ async function scrapeDomain(domain: string) {
           return false;
         }
 
-        // Only keep fonts with actual names (at least 2 words or known font names)
+        // Only keep fonts with actual names
         const fontStack = f.split(",").map((x) => x.trim());
         const firstFont = fontStack[0];
 
@@ -291,10 +308,34 @@ async function scrapeDomain(domain: string) {
           return false;
         }
 
-        // Keep if it has a real font name (contains letters and not just "body", "primary", etc)
+        // Keep if it has a real font name
         return firstFont.length > 2;
-      })
-      .slice(0, 5); // Limit to top 5 main fonts
+      });
+
+    // Categorize fonts into heading and body
+    const headingFonts: string[] = [];
+    const bodyFonts: string[] = [];
+
+    cleanedFonts.forEach((font) => {
+      const lower = font.toLowerCase();
+      // Fonts typically used for headings
+      if (
+        lower.includes("bold") ||
+        lower.includes("display") ||
+        lower.includes("headline") ||
+        lower.includes("serif") ||
+        /[A-Z][a-z]+[A-Z]/.test(font) // camelCase fonts like "Garamond"
+      ) {
+        headingFonts.push(font);
+      } else {
+        bodyFonts.push(font);
+      }
+    });
+
+    // Return max 1 heading font and 1 body font
+    const finalFonts: string[] = [];
+    if (headingFonts.length > 0) finalFonts.push(headingFonts[0]);
+    if (bodyFonts.length > 0) finalFonts.push(bodyFonts[0]);
 
     // Check if banner and logo are the same URL
     let finalBanner = banner ? resolveUrl(url, banner) : null;
@@ -314,7 +355,7 @@ async function scrapeDomain(domain: string) {
       domain,
       logo: finalLogo,
       banner: finalBanner,
-      fonts: cleanedFonts,
+      fonts: finalFonts,
     };
   } catch (error: any) {
     throw new Error(`Scraping failed: ${error.message}`);
