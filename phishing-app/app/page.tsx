@@ -32,10 +32,10 @@ export default function Home() {
               How It Works
             </Link>
             <Link
-              href="#security"
+              href="#about"
               className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
             >
-              Security
+              Meet The Devs
             </Link>
           </nav>
 
@@ -261,62 +261,71 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Security Section */}
-      <section id="security" className="py-24 md:py-32" style={{ backgroundColor: 'var(--card)' }}>
+      {/* About Us Section */}
+      <section id="about" className="py-24 md:py-32" style={{ backgroundColor: 'var(--card)' }}>
         <div className="max-w-6xl mx-auto px-6">
+
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Meet The Devs
+            </h2>
+            <p className="text-xl text-[var(--muted-foreground)] max-w-3xl mx-auto">
+              Learn a bit about the team behind PhishGuard and their different backgrounds.
+            </p>
+          </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Enterprise-Grade Security
+                Nikolas Vittorio
               </h2>
               <p className="text-lg text-[var(--muted-foreground)] mb-8 leading-relaxed">
-                Your security is our priority. All simulations run in isolated
-                environments with end-to-end encryption and strict compliance with
-                industry standards.
+                  Nikolas is a passionate full-stack developer skilled in building smooth and reliable end-to-end web
+                  applications using modern frameworks like Node.js, React and .NET. 
+                  <br></br>
+                  <br></br>
+                  The idea of being able to fashion a website capable of 
+                  spreading awareness about how easily phishing attacks can be executed is what inspired him to partner up with Kristijan and create PhishGuard.
+                  <br></br>
+                  <br></br>
+                  He has just completed his Bachelor's degree in Computer Science and is eager to work on more innovative projects like this one.    
               </p>
-
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <Shield className="w-6 h-6 flex-shrink-0 mt-1" style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <h4 className="font-semibold">
-                      ISO 27001 Certified
-                    </h4>
-                    <p className="text-[var(--muted-foreground)] text-sm">
-                      Industry-standard security practices
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Lock className="w-6 h-6 flex-shrink-0 mt-1" style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <h4 className="font-semibold">
-                      End-to-End Encryption
-                    </h4>
-                    <p className="text-[var(--muted-foreground)] text-sm">
-                      All data protected with military-grade encryption
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Shield className="w-6 h-6 flex-shrink-0 mt-1" style={{ color: 'var(--primary)' }} />
-                  <div>
-                    <h4 className="font-semibold">
-                      GDPR Compliant
-                    </h4>
-                    <p className="text-[var(--muted-foreground)] text-sm">
-                      Fully compliant with data protection regulations
-                    </p>
-                  </div>
-                </li>
-              </ul>
             </div>
 
-            <div className="rounded-lg p-8 border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
+            <div className="rounded-lg p-2 border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
               <div className="aspect-square rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--accent)' }}>
-                <Lock className="w-24 h-24" style={{ color: 'var(--accent-foreground)', opacity: 0.5 }} />
+                <img 
+                  src="https://media.licdn.com/dms/image/v2/D5603AQFaFiAHGH0S1w/profile-displayphoto-shrink_800_800/B56ZdTf2RoG0Ac-/0/1749452547793?e=1764806400&v=beta&t=bGxmbjeA0ZlgERoFbmUGng0MoDwzfMWlb3EEs-LHODA" 
+                  className="w-max h-max" 
+                  style={{ color: 'var(--accent-foreground)' }} />
               </div>
             </div>
+
+            <div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Kristijan Popordanoski
+              </h2>
+              <p className="text-lg text-[var(--muted-foreground)] mb-8 leading-relaxed">
+                  Kristijan is a passionate full-stack developer skilled in building smooth and reliable end-to-end web
+                  applications using modern frameworks like Node.js, React and .NET. 
+                  <br></br>
+                  <br></br>
+                  The idea of being able to fashion a website capable of 
+                  spreading awareness about how easily phishing attacks can be executed is what inspired him to partner up with Nikolas and create PhishGuard.
+                  <br></br>
+                  <br></br>
+                  He has just completed his Bachelor's degree in Computer Science and is eager to work on more innovative projects like this one.      
+              </p>
+            </div>
+
+            <div className="rounded-lg p-2 border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
+              <div className="aspect-square rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--accent)' }}>
+                <img 
+                  src="https://media.licdn.com/dms/image/v2/D5603AQHgvXs3z9ctCA/profile-displayphoto-shrink_800_800/B56Zb3NGs4GoAc-/0/1747904130971?e=1764806400&v=beta&t=OarhUaqLrSyMXePvOpX5DF2ZX5dWfFLz8jwU2IQKp1Y" 
+                  className="w-max h-max" 
+                  style={{ color: 'var(--accent-foreground)' }} />
+              </div>
+            </div>
+            
           </div>
         </div>
       </section>
