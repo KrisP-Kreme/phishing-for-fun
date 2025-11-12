@@ -279,15 +279,13 @@ export default function Home() {
                 Nikolas Vittorio
               </h2>
               <p className="text-lg text-[var(--muted-foreground)] mb-8 leading-relaxed">
-                  Nikolas is a passionate full-stack developer skilled in building smooth and reliable end-to-end web
-                  applications using modern frameworks like Node.js, React and .NET. 
+                  Nikolas has just wrapped up his final year as a Computer Science student at RMIT University majoring in Cybersecurity, with a strong interest in offensive security and red teaming.
                   <br></br>
                   <br></br>
-                  The idea of being able to fashion a website capable of 
-                  spreading awareness about how easily phishing attacks can be executed is what inspired him to partner up with Kristijan and create PhishGuard.
+                  He holds the Practical Junior Penetration Tester (PJPT) certification from TCM Security and is currently pursuing the Certified Penetration Testing Specialist (CPTS)
                   <br></br>
                   <br></br>
-                  He has just completed his Bachelor's degree in Computer Science and is eager to work on more innovative projects like this one.    
+                  With his background in Cybersecurity and a real passion for ethical hacking and cybersecurity education, he co-created PhishGuard alongside Kristijan.
               </p>
             </div>
 
@@ -313,7 +311,7 @@ export default function Home() {
                   spreading awareness about how easily phishing attacks can be executed is what inspired him to partner up with Nikolas and create PhishGuard.
                   <br></br>
                   <br></br>
-                  He has just completed his Bachelor's degree in Computer Science and is eager to work on more innovative projects like this one.      
+                  He has just completed his Bachelor's degree in Computer Science at RMIT University and is eager to work on more innovative projects like this one.      
               </p>
             </div>
 
