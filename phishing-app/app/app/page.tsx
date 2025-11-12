@@ -112,8 +112,8 @@ export default function AppPage() {
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center">
       <div ref={containerRef} className="w-full max-w-2xl p-8 rounded-xl border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
         <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-bold">Start Learning</h1>
-          <p className="text-sm text-[var(--muted-foreground)]">Enter a value and click the button to continue.</p>
+          <h1 className="text-3xl font-bold">Domain</h1>
+          <p className="text-sm text-[var(--muted-foreground)]">Enter a target domain to be spear phished</p>
 
           <div className="flex items-center gap-4 mt-4">
             <div className="flex-1 relative">
