@@ -33,16 +33,57 @@ async function scrapeDomain(domain: string) {
       const logoImg = $('img[alt*="logo" i]').first().attr("src");
       if (logoImg) logo = logoImg;
     }
+    
+    // If still no logo, try other image sources
+    if (!logo) {
+      // Try og:image as logo
+      logo = $('meta[property="og:image"]').attr("content");
+    }
+    
+    // If still no logo, look for images in header/nav with common logo classes
+    if (!logo) {
+      logo = $('header img, nav img, .logo img, #logo img, [class*="logo"] img, [class*="brand"] img')
+        .first()
+        .attr("src");
+    }
+    
+    // If still no logo, try images with specific role attributes
+    if (!logo) {
+      logo = $('img[role="img"], img[aria-label*="logo" i], img[title*="logo" i]')
+        .first()
+        .attr("src");
+    }
+    
+    // Last resort: take the first non-banner image from header/nav that's reasonably sized
+    if (!logo) {
+      $("header img, nav img").each((_, el) => {
+        const src = $(el).attr("src");
+        const width = $(el).attr("width");
+        const height = $(el).attr("height");
+        
+        if (
+          src &&
+          !src.includes("banner") &&
+          !src.includes("hero") &&
+          !src.includes("background") &&
+          !src.includes("loader") &&
+          !src.includes("spinner")
+        ) {
+          logo = src;
+          return false; // break
+        }
+      });
+    }
 
-    // Parse banner image
+    // Parse banner image with advanced context-aware detection
     let banner: string | undefined;
 
-    // First try Open Graph image
+    // Strategy 1: Open Graph image (most reliable for social sharing)
     banner = $('meta[property="og:image"]').attr("content");
     if (!banner)
       banner = $('meta[property="og:image:secure_url"]').attr("content");
 
-    // Then look for hero/banner images by class or id
+    // Strategy 2: Look for hero/banner by semantic class/id names
     if (!banner)
       banner = $('img[class*="banner" i], img[id*="banner" i]')
         .first()
@@ -56,10 +97,116 @@ async function scrapeDomain(domain: string) {
         .first()
         .attr("src");
 
-    // Try images in header/nav sections
+    // Strategy 3: Look for images in common banner containers
+    if (!banner) {
+      banner = $('section:first-child img, [role="banner"] img, .hero img, #hero img, .main-visual img')
+        .first()
+        .attr("src");
+    }
+
+    // Strategy 4: Detect background images from CSS (via inline styles or common patterns)
+    if (!banner) {
+      let bannerFromBg: string | undefined;
+      $('[class*="hero" i], [class*="banner" i], [class*="header" i], section:first-child').each((_, el) => {
+        const style = $(el).attr("style");
+        if (style) {
+          const bgMatch = style.match(/background(?:-image)?:\s*url\(['"]?([^'")\s]+)['"]?\)?/i);
+          if (bgMatch && bgMatch[1]) {
+            bannerFromBg = bgMatch[1];
+            return false; // break
+          }
+        }
+      });
+      if (bannerFromBg) banner = bannerFromBg;
+    }
+
+    // Strategy 5: Find largest/most prominent image in viewport (likely hero)
+    if (!banner) {
+      interface ImageScore {
+        src: string;
+        score: number;
+      }
+      let largestImg: ImageScore | null = null;
+
+      $("img").each((_, el) => {
+        const src = $(el).attr("src");
+        if (!src) return;
+        
+        const srcStr = typeof src === 'string' ? src : String(src);
+        const width = parseInt($(el).attr("width") || "0") || 0;
+        const height = parseInt($(el).attr("height") || "0") || 0;
+        const alt = $(el).attr("alt") || "";
+        
+        // Skip obvious non-banner images
+        if (
+          srcStr.includes("favicon") ||
+          srcStr.includes("logo") ||
+          srcStr.includes("icon") ||
+          srcStr.includes("pixel") ||
+          srcStr.includes("tracker") ||
+          srcStr.includes("ad") ||
+          srcStr.includes("advertisement") ||
+          srcStr.includes("product") ||
+          srcStr.includes("thumbnail") ||
+          srcStr.includes("thumb") ||
+          srcStr.includes("avatar") ||
+          srcStr.includes("profile") ||
+          srcStr.includes("spinner") ||
+          srcStr.includes("loader") ||
+          alt.toLowerCase().includes("icon") ||
+          alt.toLowerCase().includes("logo") ||
+          alt.toLowerCase().includes("product") ||
+          alt.toLowerCase().includes("thumbnail")
+        ) {
+          return; // continue
+        }
+
+        // Calculate a score based on context clues
+        let score = 0;
+
+        // Width/height heuristics (banners are typically wide)
+        if (width > 800 || height > 300) score += 50;
+        if (width > 1200) score += 30;
+
+        // Alt text indicating hero/banner
+        if (alt.toLowerCase().includes("hero") || alt.toLowerCase().includes("banner")) score += 100;
+
+        // Parent container context
+        const parent = $(el).parent();
+        const parentClass = parent.attr("class") || "";
+        const parentId = parent.attr("id") || "";
+        if (
+          parentClass.toLowerCase().includes("hero") ||
+          parentClass.toLowerCase().includes("banner") ||
+          parentClass.toLowerCase().includes("header") ||
+          parentId.toLowerCase().includes("hero") ||
+          parentId.toLowerCase().includes("banner")
+        ) {
+          score += 80;
+        }
+
+        // Image inside <section>, <header>, or <main> early in DOM
+        const section = $(el).closest("section, header, main, [role='banner']");
+        if (section.length > 0 && section.index() <= 1) score += 60;
+
+        // URL patterns suggesting promotional/hero imagery
+        if (srcStr.includes("hero") || srcStr.includes("banner") || srcStr.includes("main")) score += 40;
+
+        // Keep track of the highest-scoring image
+        if (score > 0 && (!largestImg || score > largestImg.score)) {
+          largestImg = { src: srcStr, score };
+        }
+      });
+
+      if (largestImg && "src" in largestImg) {
+        banner = (largestImg as any).src;
+      }
+    }
+
+    // Strategy 6: Fallback to first meaningful image in header/nav
     if (!banner) banner = $("header img, nav img").first().attr("src");
 
-    // Last resort: find first large image (assume it's a banner)
+    // Strategy 7: Last resort - first non-excluded image
     if (!banner) {
       $("img").each((_, el) => {
         const src = $(el).attr("src");
@@ -67,7 +214,10 @@ async function scrapeDomain(domain: string) {
           src &&
           !src.includes("favicon") &&
           !src.includes("logo") &&
-          !src.includes("icon")
+          !src.includes("icon") &&
+          !src.includes("ad") &&
+          !src.includes("tracker") &&
+          !src.includes("pixel")
         ) {
           banner = src;
           return false; // break
@@ -352,10 +502,10 @@ async function scrapeDomain(domain: string) {
     }
 
     return {
-      domain,
       logo: finalLogo,
       banner: finalBanner,
-      fonts: finalFonts,
+      title_font: finalFonts[0] || null,
+      body_font: finalFonts[1] || null,
     };
   } catch (error: any) {
     throw new Error(`Scraping failed: ${error.message}`);
