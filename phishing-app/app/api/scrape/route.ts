@@ -27,31 +27,41 @@ async function scrapeDomain(domain: string) {
     const $ = cheerio.load(html);
 
     // Parse logo from og:image, icon, or logo schema (exclude favicon.ico)
-    let logo = $('link[rel="icon"]').attr("href");
-    if (!logo) logo = $('link[rel="apple-touch-icon"]').attr("href");
+    let logo: string | null = $('link[rel="icon"]').attr("href") || null;
+    if (!logo) logo = $('link[rel="apple-touch-icon"]').attr("href") || null;
+    
+    // Filter out favicon.ico if it was selected
+    if (logo && logo.includes("favicon.ico")) {
+      logo = null;
+    }
+    
     if (!logo) {
       const logoImg = $('img[alt*="logo" i]').first().attr("src");
       if (logoImg) logo = logoImg;
     }
+    if (logo) console.log("✓ Logo found (icon/apple-touch-icon/alt text):", logo);
     
     // If still no logo, try other image sources
     if (!logo) {
-      // Try og:image as logo
-      logo = $('meta[property="og:image"]').attr("content");
+      // Try og:image as logo (high priority)
+      logo = $('meta[property="og:image"]').attr("content") || null;
+      if (logo) console.log("✓ Logo found (og:image):", logo);
     }
     
     // If still no logo, look for images in header/nav with common logo classes
     if (!logo) {
       logo = $('header img, nav img, .logo img, #logo img, [class*="logo"] img, [class*="brand"] img')
         .first()
-        .attr("src");
+        .attr("src") || null;
+      if (logo) console.log("✓ Logo found (header/nav/logo classes):", logo);
     }
     
     // If still no logo, try images with specific role attributes
     if (!logo) {
       logo = $('img[role="img"], img[aria-label*="logo" i], img[title*="logo" i]')
         .first()
-        .attr("src");
+        .attr("src") || null;
+      if (logo) console.log("✓ Logo found (role/aria-label/title):", logo);
     }
     
     // Last resort: take the first non-banner image from header/nav that's reasonably sized
@@ -70,44 +80,60 @@ async function scrapeDomain(domain: string) {
           !src.includes("spinner")
         ) {
           logo = src;
+          console.log("✓ Logo found (fallback header/nav image):", logo);
           return false; // break
         }
       });
     }
+    if (!logo) console.log("⚠ No logo found for", domain);
 
     // Parse banner image with advanced context-aware detection
     let banner: string | undefined;
 
-    // Strategy 1: Open Graph image (most reliable for social sharing)
-    banner = $('meta[property="og:image"]').attr("content");
+    // Strategy 1: Open Graph image (most reliable for social sharing / hero images)
+    banner = $('meta[property="og:image"]').attr("content") || undefined;
     if (!banner)
-      banner = $('meta[property="og:image:secure_url"]').attr("content");
+      banner = $('meta[property="og:image:secure_url"]').attr("content") || undefined;
+    if (banner) console.log("✓ Banner found (og:image):", banner);
 
-    // Strategy 2: Look for hero/banner by semantic class/id names
+    // Strategy 1b: Twitter card image (alternative marketing image)
+    if (!banner) {
+      banner = $('meta[name="twitter:image"]').attr("content") || undefined;
+      if (banner) console.log("✓ Banner found (twitter:image):", banner);
+    }
+
     if (!banner)
       banner = $('img[class*="banner" i], img[id*="banner" i]')
         .first()
-        .attr("src");
+        .attr("src") || undefined;
     if (!banner)
       banner = $('img[class*="hero" i], img[id*="hero" i]')
         .first()
-        .attr("src");
+        .attr("src") || undefined;
     if (!banner)
       banner = $('img[class*="header" i], img[id*="header" i]')
         .first()
-        .attr("src");
+        .attr("src") || undefined;
+    if (!banner)
+      banner = $('img[class*="featured" i], img[id*="featured" i]')
+        .first()
+        .attr("src") || undefined;
+    if (!banner)
+      banner = $('img[class*="main-visual" i], img[id*="main-visual" i]')
+        .first()
+        .attr("src") || undefined;
 
     // Strategy 3: Look for images in common banner containers
     if (!banner) {
-      banner = $('section:first-child img, [role="banner"] img, .hero img, #hero img, .main-visual img')
+      banner = $('section:first-child img, [role="banner"] img, .hero img, #hero img, .main-visual img, .featured-image img, .homepage-hero img')
         .first()
-        .attr("src");
+        .attr("src") || undefined;
     }
 
     // Strategy 4: Detect background images from CSS (via inline styles or common patterns)
     if (!banner) {
       let bannerFromBg: string | undefined;
-      $('[class*="hero" i], [class*="banner" i], [class*="header" i], section:first-child').each((_, el) => {
+      $('[class*="hero" i], [class*="banner" i], [class*="header" i], [class*="featured" i], section:first-child').each((_, el) => {
         const style = $(el).attr("style");
         if (style) {
           const bgMatch = style.match(/background(?:-image)?:\s*url\(['"]?([^'")\s]+)['"]?\)?/i);
@@ -168,8 +194,8 @@ async function scrapeDomain(domain: string) {
         if (width > 800 || height > 300) score += 50;
         if (width > 1200) score += 30;
 
-        // Alt text indicating hero/banner
-        if (alt.toLowerCase().includes("hero") || alt.toLowerCase().includes("banner")) score += 100;
+        // Alt text indicating hero/banner/featured
+        if (alt.toLowerCase().includes("hero") || alt.toLowerCase().includes("banner") || alt.toLowerCase().includes("featured")) score += 100;
 
         // Parent container context
         const parent = $(el).parent();
@@ -178,9 +204,11 @@ async function scrapeDomain(domain: string) {
         if (
           parentClass.toLowerCase().includes("hero") ||
           parentClass.toLowerCase().includes("banner") ||
+          parentClass.toLowerCase().includes("featured") ||
           parentClass.toLowerCase().includes("header") ||
           parentId.toLowerCase().includes("hero") ||
-          parentId.toLowerCase().includes("banner")
+          parentId.toLowerCase().includes("banner") ||
+          parentId.toLowerCase().includes("featured")
         ) {
           score += 80;
         }
@@ -190,7 +218,8 @@ async function scrapeDomain(domain: string) {
         if (section.length > 0 && section.index() <= 1) score += 60;
 
         // URL patterns suggesting promotional/hero imagery
-        if (srcStr.includes("hero") || srcStr.includes("banner") || srcStr.includes("main")) score += 40;
+        if (srcStr.includes("hero") || srcStr.includes("banner") || srcStr.includes("featured") || srcStr.includes("main")) score += 40;
+        if (srcStr.includes("marketing") || srcStr.includes("campaign")) score += 35;
 
         // Keep track of the highest-scoring image
         if (score > 0 && (!largestImg || score > largestImg.score)) {
@@ -203,8 +232,8 @@ async function scrapeDomain(domain: string) {
       }
     }
 
-    // Strategy 6: Fallback to first meaningful image in header/nav
-    if (!banner) banner = $("header img, nav img").first().attr("src");
+    // Strategy 6: Fallback to first meaningful image in header/nav/main
+    if (!banner) banner = $("header img, nav img, main img").first().attr("src") || undefined;
 
     // Strategy 7: Last resort - first non-excluded image
     if (!banner) {
@@ -228,9 +257,12 @@ async function scrapeDomain(domain: string) {
     // Parse fonts from style tags and link tags
     const fonts: string[] = [];
     const baseUrl = new URL(url);
+    console.log("\n📄 Scraping fonts from:", domain);
 
     // Check external CSS link tags and fetch their content
     const stylesheetPromises: Promise<void>[] = [];
+    const stylesheetCount = $('link[rel="stylesheet"]').length;
+    if (stylesheetCount > 0) console.log(`  → Found ${stylesheetCount} external stylesheets`);
     $('link[rel="stylesheet"]').each((_, el) => {
       const href = $(el).attr("href");
       if (href) {
@@ -247,9 +279,13 @@ async function scrapeDomain(domain: string) {
               // Extract font-family from fetched CSS
               const matches = css.match(/font-family:\s*([^;]+)/gi);
               if (matches) {
+                console.log(`    ✓ Found ${matches.length} font-family declarations in stylesheet`);
                 matches.forEach((match) => {
                   const fontFamily = match.replace(/font-family:\s*/i, "").trim();
-                  if (fontFamily && fontFamily.length > 0) fonts.push(fontFamily);
+                  if (fontFamily && fontFamily.length > 0) {
+                    fonts.push(fontFamily);
+                    console.log(`      - ${fontFamily}`);
+                  }
                 });
               }
               // Also extract @font-face font names
@@ -257,10 +293,13 @@ async function scrapeDomain(domain: string) {
                 /@font-face\s*\{[^}]*font-family:\s*['"]?([^'"};]+)['"]?[^}]*\}/gi
               );
               if (fontFaceMatches) {
+                console.log(`    ✓ Found ${fontFaceMatches.length} @font-face declarations`);
                 fontFaceMatches.forEach((match) => {
-                  const fontName = match.match(/font-family:\s*['"]?([^'"};]+)['"]?/i);
+                  const fontName = match.match(/font-family:\s*['"']?([^'"'};]+)['"']?/i);
                   if (fontName && fontName[1]) {
-                    fonts.push(`@font-face: ${fontName[1].trim()}`);
+                    const fontEntry = `@font-face: ${fontName[1].trim()}`;
+                    fonts.push(fontEntry);
+                    console.log(`      - ${fontEntry}`);
                   }
                 });
               }
@@ -274,29 +313,40 @@ async function scrapeDomain(domain: string) {
     await Promise.all(stylesheetPromises);
 
     // Check inline styles on all elements
-    $("*[style]").each((_, el) => {
-      const style = $(el).attr("style");
+    const inlineStyleElements = $('*[style]').length;
+    if (inlineStyleElements > 0) console.log(`  → Checking ${inlineStyleElements} elements with inline styles`);
+    $('*[style]').each((_, el) => {
+      const style = $(el).attr('style');
       if (style) {
         const matches = style.match(/font-family:\s*([^;]+)/gi);
         if (matches) {
           matches.forEach((match) => {
             const fontFamily = match.replace(/font-family:\s*/i, "").trim();
-            if (fontFamily && fontFamily.length > 0) fonts.push(fontFamily);
+            if (fontFamily && fontFamily.length > 0) {
+              fonts.push(fontFamily);
+              console.log(`    ✓ Inline style font: ${fontFamily}`);
+            }
           });
         }
       }
     });
 
     // Check style tags for font-family declarations
+    const styleTags = $('style').length;
+    if (styleTags > 0) console.log(`  → Checking ${styleTags} <style> tags`);
     $("style").each((_, el) => {
       const styleContent = $(el).html();
       if (styleContent) {
         // Match all font-family declarations
         const matches = styleContent.match(/font-family:\s*([^;]+)/gi);
         if (matches) {
+          console.log(`    ✓ Found ${matches.length} font-family declarations in <style> tag`);
           matches.forEach((match) => {
             const fontFamily = match.replace(/font-family:\s*/i, "").trim();
-            if (fontFamily && fontFamily.length > 0) fonts.push(fontFamily);
+            if (fontFamily && fontFamily.length > 0) {
+              fonts.push(fontFamily);
+              console.log(`      - ${fontFamily}`);
+            }
           });
         }
 
@@ -305,10 +355,13 @@ async function scrapeDomain(domain: string) {
           /@font-face\s*\{[^}]*font-family:\s*['"]?([^'"};]+)['"]?[^}]*\}/gi
         );
         if (fontFaceMatches) {
+          console.log(`    ✓ Found ${fontFaceMatches.length} @font-face declarations in <style> tag`);
           fontFaceMatches.forEach((match) => {
-            const fontName = match.match(/font-family:\s*['"]?([^'"};]+)['"]?/i);
+            const fontName = match.match(/font-family:\s*['"']?([^'"'};]+)['"']?/i);
             if (fontName && fontName[1]) {
-              fonts.push(`@font-face: ${fontName[1].trim()}`);
+              const fontEntry = `@font-face: ${fontName[1].trim()}`;
+              fonts.push(fontEntry);
+              console.log(`      - ${fontEntry}`);
             }
           });
         }
@@ -316,25 +369,35 @@ async function scrapeDomain(domain: string) {
     });
 
     // Check Google Fonts links
+    const googleFontsCount = $('link[href*="fonts.googleapis.com"]').length;
+    if (googleFontsCount > 0) console.log(`  ✓ Found ${googleFontsCount} Google Fonts link(s)`);
     $('link[href*="fonts.googleapis.com"]').each((_, el) => {
       const href = $(el).attr("href");
       if (href) {
         fonts.push(`Google Fonts: ${href}`);
+        console.log(`    → ${href}`);
         // Try to extract font names from the URL
         const params = new URLSearchParams(href.split("?")[1]);
         const family = params.get("family");
         if (family) {
           family.split("|").forEach((f) => {
-            fonts.push(`  - ${f.trim()}`);
+            const fontName = f.trim();
+            fonts.push(`  - ${fontName}`);
+            console.log(`      - ${fontName}`);
           });
         }
       }
     });
 
     // Check for Adobe Fonts (Typekit)
+    const adobeFontsCount = $('link[href*="typekit.net"]').length;
+    if (adobeFontsCount > 0) console.log(`  ✓ Found ${adobeFontsCount} Adobe Fonts (Typekit) link(s)`);
     $('link[href*="typekit.net"]').each((_, el) => {
       const href = $(el).attr("href");
-      if (href) fonts.push(`Adobe Fonts: ${href}`);
+      if (href) {
+        fonts.push(`Adobe Fonts: ${href}`);
+        console.log(`    → ${href}`);
+      }
     });
 
     // Check for @import in style tags

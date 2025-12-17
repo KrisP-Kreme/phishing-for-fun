@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
 // Dynamically import CodeMirror to avoid SSR issues
@@ -17,6 +18,7 @@ interface ScrapedData {
 }
 
 export default function AppPage() {
+  const router = useRouter();
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [scrapedData, setScrapedData] = useState<any>(null);
@@ -140,10 +142,11 @@ export default function AppPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Scraping failed");
-      setScrapedData(data);
+      
+      // Store domain in URL params and navigate to select-forge
+      router.push(`/app/select-forge?domain=${encodeURIComponent(domain)}`);
     } catch (err: any) {
       setError(err.message || "An error occurred");
-    } finally {
       setIsLoading(false);
     }
   };
