@@ -287,7 +287,8 @@ export default function Home() {
             <div className="rounded-lg p-2 border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
               <div className="aspect-square rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--accent)' }}>
                 <img 
-                  src="https://media.licdn.com/dms/image/v2/D5603AQFaFiAHGH0S1w/profile-displayphoto-shrink_800_800/B56ZdTf2RoG0Ac-/0/1749452547793?e=1764806400&v=beta&t=bGxmbjeA0ZlgERoFbmUGng0MoDwzfMWlb3EEs-LHODA" 
+                
+                  src="https://media.licdn.com/dms/image/v2/D5603AQFaFiAHGH0S1w/profile-displayphoto-shrink_800_800/B56ZdTf2RoG0Ac-/0/1749452547793?e=1767830400&v=beta&t=fPREcxPcvvw2QQKCO5dGCzVeN-anfsg2i9sqqmx5nHI"
                   className="w-max h-max" 
                   style={{ color: 'var(--accent-foreground)' }} />
               </div>
@@ -331,7 +332,7 @@ export default function Home() {
             <div className="rounded-lg p-2 border" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--border)' }}>
               <div className="aspect-square rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--accent)' }}>
                 <img 
-                  src="https://media.licdn.com/dms/image/v2/D5603AQHgvXs3z9ctCA/profile-displayphoto-shrink_800_800/B56Zb3NGs4GoAc-/0/1747904130971?e=1764806400&v=beta&t=OarhUaqLrSyMXePvOpX5DF2ZX5dWfFLz8jwU2IQKp1Y" 
+                  src="https://media.licdn.com/dms/image/v2/D5603AQHgvXs3z9ctCA/profile-displayphoto-shrink_800_800/B56Zb3NGs4GoAc-/0/1747904130971?e=1767830400&v=beta&t=5YLtiwpVRPY-751QRlasSMIKyJ9iPCwV92TeVJmJWyo" 
                   className="w-max h-max" 
                   style={{ color: 'var(--accent-foreground)' }} />
               </div>
